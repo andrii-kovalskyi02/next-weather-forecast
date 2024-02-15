@@ -5,6 +5,9 @@ This is a weather forecast application built on Next.js. Get accurate weather pr
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Poppins, a custom Google Font.
 
+## Live Version
+Try the live version of the application [here](https://next-weather-forecast-nine.vercel.app/).
+
 ## Prerequisites
 
 - Node.js version 18.17 or higher
