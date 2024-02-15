@@ -8,11 +8,24 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      boxShadow: {
+        '3xl': '10px 10px 4px 0 rgba(0, 0, 0, 0.5)',
       },
+      keyframes: {
+        fadeIn: {
+          'from': {
+            opacity: '0',
+            transform: 'translateY(-10px)'
+          },
+          'to': {
+            opacity: '1',
+            transform: 'translateY(0)'
+          }
+        }
+      },
+      animation: {
+        initial: 'fadeIn 0.3s ease-in-out',
+      }
     },
   },
   plugins: [],
