@@ -1,7 +1,7 @@
 "use client";
 
 import { DateTimeFormatOptions } from "intl";
-import React, { createContext, useContext } from "react";
+import { createContext, useContext } from "react";
 
 type Context = {
   timeFormatOptions: DateTimeFormatOptions

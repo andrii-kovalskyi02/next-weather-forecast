@@ -3,6 +3,11 @@ import Loading from "./loading";
 import WeatherDateTimeDisplay from "@/components/WeatherDateTimeDisplay";
 import Search from "@/components/Search";
 
+const THE_HAGUE_COORDS = {
+  lat: 52.0799838,
+  lon: 4.3113461
+};
+
 type Props = {
   searchParams?: {
     query?: string;
@@ -11,15 +16,15 @@ type Props = {
   };
 };
 
-export default async function Home({ searchParams }: Props) {
+export default async function Home({ searchParams }: Props) { 
   const geolocation = {
-    lat: +(searchParams?.lat ?? 52.0799838),
-    lon: +(searchParams?.lon ?? 4.3113461)
+    lat: +(searchParams?.lat ?? THE_HAGUE_COORDS.lat),
+    lon: +(searchParams?.lon ?? THE_HAGUE_COORDS.lon)
   };
 
   return (
     <section>
-      <Search placeholder="Search for your preffered city..." />
+      <Search placeholder="Search for your preferred city..." />
       <Suspense fallback={<Loading />}>
         <WeatherDateTimeDisplay
           geolocation={geolocation}

@@ -1,8 +1,7 @@
 "use client";
 
-import React from 'react';
 import Image from 'next/image';
-import getLocalizedDateString from '@/utils/getLocalizedDateString';
+import { getLocalizedDateString } from '@/utils/getLocalizedDateString';
 import { useAppContext } from '@/app/provider';
 import { getWindDirection } from '@/utils/getWindDirection';
 
@@ -42,7 +41,7 @@ const CurrentWeatherDetails = ({
                 Sunrise
               </h3>
               <h4 className='font-semibold text-base'>
-                {getLocalizedDateString(sys.sunrise, timeFormatOptions)}
+                {getLocalizedDateString(sys.sunrise * 1000, timeFormatOptions)}
               </h4>
             </div>
           </div>
@@ -59,7 +58,7 @@ const CurrentWeatherDetails = ({
                 Sunset
               </h3>
               <h4 className='font-semibold text-base'>
-                {getLocalizedDateString(sys.sunset, timeFormatOptions)}
+                {getLocalizedDateString(sys.sunset * 1000, timeFormatOptions)}
               </h4>
             </div>
           </div>
@@ -95,7 +94,7 @@ const CurrentWeatherDetails = ({
         <div className='flex flex-col items-center w-32'>
           <Image
             src="/assets/icons/wind.png"
-            alt="Weather icon for wind"
+            alt="Weather icon for wind speed"
             width={60}
             height={60}
             className='mb-2'

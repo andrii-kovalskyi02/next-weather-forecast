@@ -1,5 +1,3 @@
-import React from 'react';
-
 type Props = {
   children: React.ReactNode;
 }
@@ -10,6 +8,6 @@ const WeatherCardBackdrop = ({ children }: Props) => {
       {children}
     </div>
   )
-}
+};
 
-export default WeatherCardBackdrop
+export default WeatherCardBackdrop;

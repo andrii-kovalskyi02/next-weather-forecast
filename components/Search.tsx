@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
@@ -11,12 +11,17 @@ const Search = ({ placeholder }: { placeholder: string }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const [validationError, setValidationError] = useState(false);
   const [locations, setLocations] = useState<CustomGeolocation[]>([]);
-  const [inputQuery, setInputQuery] = useState('');
+  const [validationError, setValidationError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [inputQuery, setInputQuery] = useState('');
+  const searchRef = useRef<HTMLDivElement | null>(null);
   const query = searchParams.get('query') || '';
-  
+
+  const resetInputQuery = () => {
+    setInputQuery('');
+  };
+
   const handleSearch = useDebouncedCallback((searchQuery: string) => {
     const params = new URLSearchParams(searchParams);
     const normalizedQuery = searchQuery.trim();
@@ -36,7 +41,7 @@ const Search = ({ placeholder }: { placeholder: string }) => {
     }
 
     replace(`${pathname}?${params.toString()}`);
-  }, 300);
+  }, 400);
 
   const handleOptionClick = (lat: number, lon: number) => {
     const params = new URLSearchParams(searchParams);
@@ -47,7 +52,13 @@ const Search = ({ placeholder }: { placeholder: string }) => {
 
     replace(`${pathname}?${params.toString()}`)
 
-    setInputQuery('');
+    resetInputQuery();
+  };
+
+  const handleClickOutside = (event: Event) => {
+    if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      resetInputQuery();
+    }
   };
 
   useEffect(() => {
@@ -70,9 +81,20 @@ const Search = ({ placeholder }: { placeholder: string }) => {
   useEffect(() => {
     handleSearch(inputQuery);
   }, [inputQuery, handleSearch]);
- 
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative flex flex-col gap-2 w-full mb-7 lg:w-[50%] lg:ml-36">
+    <div
+      ref={searchRef}
+      onKeyUp={e => e.key === 'Escape' && resetInputQuery()}
+      className="relative flex flex-col gap-2 w-full mb-10 animate-initial lg:w-[50%] lg:ml-36"
+    >
       <label htmlFor="search" className="sr-only">
         Search
       </label>
@@ -89,10 +111,13 @@ const Search = ({ placeholder }: { placeholder: string }) => {
         placeholder={placeholder}
         onChange={e => setInputQuery(e.target.value)}
         value={inputQuery}
+        aria-describedby="search-input-error"
       />
-      {query && (
+      {query && inputQuery && (
         <ul
-          className="absolute top-12 w-full p-2 rounded-lg bg-white shadow-2xl md:top-[60px]"
+          className="absolute top-12 w-full p-2 rounded-lg bg-white shadow-2xl animate-initial md:top-[60px]"
+          aria-label={`Found ${locations.length} search results. Use tab to navigate and choose a location.`}
+          role="listbox"
           tabIndex={0}
         >
           {isLoading
@@ -102,17 +127,22 @@ const Search = ({ placeholder }: { placeholder: string }) => {
                 key={Math.random()}
                 className="py-2 px-3 rounded-lg cursor-pointer transition-all hover:bg-zinc-300"
                 onClick={() => handleOptionClick(lat, lon)}
+                onKeyUp={e => e.key === 'Enter' && handleOptionClick(lat, lon)}
                 tabIndex={0}
               >
                 {`${name}, ${state ? `${state},` : ''} ${country}`}
-              </li>
+            </li>
             ))
           }
-          {locations.length === 0 && !isLoading && <h1>Not Found</h1>}
+          {locations.length === 0 && !isLoading && <li>Not Found</li>}
         </ul>
       )}
       {validationError && (
-        <span className="italic text-sm text-red-500 md:text-base" role="alert">
+        <span
+          id="search-input-error"
+          className="italic text-sm text-red-500 md:text-base"
+          role="alert"
+        >
           Enter a valid city name
         </span>
       )}

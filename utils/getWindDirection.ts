@@ -3,4 +3,4 @@ export const getWindDirection = (deg: number): string => {
   const index = Math.round(deg / 45) % directions.length;
 
   return directions[index];
-}
+};
