@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import { AppContextProvider } from "./provider";
+import { AppContextProvider } from "@/providers/AppProvider";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} text-zinc-800 bg-gradient-to-br from-white to-slate-600`}>
+      <body className={`${poppins.className} text-zinc-800 bg-gradient-to-br from-sky-100 via-blue-200 to-slate-600`}>
         <AppContextProvider>
           <main className="min-w-[375px] min-h-screen max-w-screen-xl m-auto p-10">
             {children}

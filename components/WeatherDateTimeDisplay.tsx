@@ -1,6 +1,6 @@
-import WeatherCardBackdrop from './WeatherCardBackdrop';
+import WeatherCardBackdrop from './ui/WeatherCardBackdrop';
 import CurrentWeatherDetails from './CurrentWeatherDetails';
-import { getCurrentWeather, getTimeZone } from '@/app/handler';
+import { getCurrentWeather, getTimeZone } from '@/lib/api';
 import WeatherDateTime from './WeatherDateTime';
 
 type Props = {

@@ -2,145 +2,120 @@
 
 import Image from 'next/image';
 import { getLocalizedDateString } from '@/utils/getLocalizedDateString';
-import { useAppContext } from '@/app/provider';
+import { useAppContext } from '@/providers/AppProvider';
 import { getWindDirection } from '@/utils/getWindDirection';
+import SunriseIcon from './icons/SunriseIcon';
+import SunsetIcon from './icons/SunsetIcon';
+import HumidityIcon from './icons/HumidityIcon';
+import WindIcon from './icons/WindIcon';
+import PressureIcon from './icons/PressureIcon';
+import CompassIcon from './icons/CompassIcon';
 
 type Props = {
-  weatherData: WeatherData
+  weatherData: WeatherData;
 };
 
-const CurrentWeatherDetails = ({
-  weatherData
-}: Props) => {
+type MetricCardProps = {
+  icon: React.ReactNode;
+  value: string;
+  label: string;
+};
+
+const MetricCard = ({ icon, value, label }: MetricCardProps) => (
+  <div className="flex flex-col items-center gap-2 w-32 bg-white/20 rounded-2xl p-4">
+    <div className="w-10 h-10 flex items-center justify-center text-zinc-700">
+      {icon}
+    </div>
+    <span className="font-bold text-xl">{value}</span>
+    <span className="font-medium text-sm text-zinc-600">{label}</span>
+  </div>
+);
+
+const CurrentWeatherDetails = ({ weatherData }: Props) => {
   const { timeFormatOptions } = useAppContext();
   const { weather, main, wind, sys } = weatherData;
   const weatherIconUrl = `https://openweathermap.org/img/wn/${weather[0].icon}@2x.png`;
+  const windSpeedKmh = Math.round(wind.speed * 3.6);
 
   return (
-    <div className='flex flex-col justify-center items-center gap-10 h-full p-6 md:flex-row md:gap-7'>
-      <div className='flex flex-col gap-7'>
-        <div className='flex flex-col justify-center'>
-          <h1 className='font-bold text-[5rem] leading-[5rem] bg-clip-text text-transparent bg-gradient-to-bl from-white from-1% to-zinc-800'>
+    <div className="flex flex-col justify-center items-center gap-8 h-full p-6 md:flex-row md:gap-6">
+      {/* Temperature & sun times */}
+      <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center">
+          <h1 className="font-bold text-[5rem] leading-none bg-clip-text text-transparent bg-gradient-to-bl from-white from-5% to-zinc-800">
             {Math.round(main.temp)}&deg;C
           </h1>
-          <h2 className='flex justify-center items-center gap-2 font-semibold text-3xl'>
-            <span className='flex flex-shrink-0 text-xl'>Feels like:</span>
+          <p className="flex items-center gap-1.5 font-semibold text-xl text-zinc-600">
+            <span className="text-base font-medium">Feels like</span>
             {Math.round(main.feels_like)}&deg;C
-          </h2>
+          </p>
         </div>
-        <div className='flex flex-col gap-3'>
-          <div className='flex justify-center gap-3 text-center'>
-            <Image
-              src="/assets/icons/sunrise.png"
-              alt="Icon for sunrise"
-              width={48}
-              height={52}
-            />
-            <div className="flex flex-col">
-              <h3 className='font-bold text-xl'>
-                Sunrise
-              </h3>
-              <h4 className='font-semibold text-base'>
+
+        <div className="flex flex-col gap-3 w-full">
+          <div className="flex items-center gap-3">
+            <SunriseIcon className="w-10 h-10 flex-shrink-0 text-amber-500" />
+            <div>
+              <p className="font-bold text-base leading-tight">Sunrise</p>
+              <p className="font-medium text-sm text-zinc-600">
                 {getLocalizedDateString(sys.sunrise * 1000, timeFormatOptions)}
-              </h4>
+              </p>
             </div>
           </div>
-          <div className='flex justify-center gap-3 text-center'>
-            <Image
-              src="/assets/icons/sunset.png"
-              alt="Icon for sunset"
-              width={48}
-              height={52}
-
-            />
-            <div className="flex flex-col">
-              <h3 className='font-bold text-xl'>
-                Sunset
-              </h3>
-              <h4 className='font-semibold text-base'>
+          <div className="flex items-center gap-3">
+            <SunsetIcon className="w-10 h-10 flex-shrink-0 text-orange-400" />
+            <div>
+              <p className="font-bold text-base leading-tight">Sunset</p>
+              <p className="font-medium text-sm text-zinc-600">
                 {getLocalizedDateString(sys.sunset * 1000, timeFormatOptions)}
-              </h4>
+              </p>
             </div>
           </div>
         </div>
       </div>
-      <div className='flex flex-col items-center w-[60%]'>
+
+      {/* Weather icon & description */}
+      <div className="flex flex-col items-center gap-2">
         <Image
           src={weatherIconUrl}
           alt={`Weather icon for ${weather[0].description}`}
           width={150}
           height={150}
         />
-        <h2 className='font-bold text-3xl text-center'>
-          {weather[0].main}
+        <h2 className="font-bold text-2xl text-center capitalize">
+          {weather[0].description}
         </h2>
       </div>
-      <div className='flex flex-wrap justify-center gap-y-4 max-w-72'>
-        <div className='flex flex-col items-center w-32'>
-          <Image
-            src="/assets/icons/humidity.png"
-            alt="Weather icon for humidity"
-            width={60}
-            height={51}
-            className='mb-4'
-          />
-          <h3 className='mb-1 font-bold text-xl'>
-            {main.humidity}%
-          </h3>
-          <h4 className='font-medium text-base'>
-            Humidity
-          </h4>
-        </div>
-        <div className='flex flex-col items-center w-32'>
-          <Image
-            src="/assets/icons/wind.png"
-            alt="Weather icon for wind speed"
-            width={60}
-            height={60}
-            className='mb-2'
-          />
-          <h3 className='mb-1 font-bold text-xl'>
-            {Math.round(wind.speed)}km/h
-          </h3>
-          <h4 className='font-medium text-base'>
-            Wind Speed
-          </h4>
-        </div>
-        <div className='flex flex-col items-center w-32'>
-          <Image
-            src="/assets/icons/pressure.png"
-            alt="Weather icon for pressure"
-            width={60}
-            height={60}
-            className='mb-2'
-          />
-          <h3 className='mb-1 font-bold text-xl'>
-            {main.pressure}hPa
-          </h3>
-          <h4 className='font-medium text-base'>
-            Pressure
-          </h4>
-        </div>
-        <div className='flex flex-col items-center w-32'>
-          <div className="mb-2">
-            <Image
-              src="/assets/icons/wind-direction.png"
-              alt="Weather icon for wind direction"
-              width={60}
-              height={60}
+
+      {/* Metric cards */}
+      <div className="flex flex-wrap justify-center gap-3 max-w-72">
+        <MetricCard
+          icon={<HumidityIcon className="w-full h-full" />}
+          value={`${main.humidity}%`}
+          label="Humidity"
+        />
+        <MetricCard
+          icon={<WindIcon className="w-full h-full" />}
+          value={`${windSpeedKmh} km/h`}
+          label="Wind Speed"
+        />
+        <MetricCard
+          icon={<PressureIcon className="w-full h-full" />}
+          value={`${main.pressure} hPa`}
+          label="Pressure"
+        />
+        <MetricCard
+          icon={
+            <CompassIcon
+              className="w-full h-full"
               style={{ transform: `rotate(${wind.deg}deg)` }}
             />
-          </div>
-          <h3 className='mb-1 font-bold text-xl'>
-            {getWindDirection(wind.deg)}
-          </h3>
-          <h4 className='font-medium text-base'>
-            Wind Direction
-          </h4>
-        </div>
+          }
+          value={getWindDirection(wind.deg)}
+          label="Wind Dir"
+        />
       </div>
     </div>
-  )
+  );
 };
 
 export default CurrentWeatherDetails;

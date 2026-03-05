@@ -9,23 +9,23 @@ const config: Config = {
   theme: {
     extend: {
       boxShadow: {
-        '3xl': '10px 10px 4px 0 rgba(0, 0, 0, 0.5)',
+        card: '0 8px 32px 0 rgba(0, 0, 0, 0.18)',
       },
       keyframes: {
         fadeIn: {
-          'from': {
+          from: {
             opacity: '0',
-            transform: 'translateY(-10px)'
+            transform: 'translateY(-8px)',
           },
-          'to': {
+          to: {
             opacity: '1',
-            transform: 'translateY(0)'
-          }
-        }
+            transform: 'translateY(0)',
+          },
+        },
       },
       animation: {
-        initial: 'fadeIn 0.3s ease-in-out',
-      }
+        initial: 'fadeIn 0.35s ease-out',
+      },
     },
   },
   plugins: [],

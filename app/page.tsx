@@ -9,17 +9,18 @@ const THE_HAGUE_COORDS = {
 };
 
 type Props = {
-  searchParams?: {
+  searchParams?: Promise<{
     query?: string;
     lat?: string;
     lon?: string;
-  };
+  }>;
 };
 
-export default async function Home({ searchParams }: Props) { 
+export default async function Home({ searchParams }: Props) {
+  const params = await searchParams;
   const geolocation = {
-    lat: +(searchParams?.lat ?? THE_HAGUE_COORDS.lat),
-    lon: +(searchParams?.lon ?? THE_HAGUE_COORDS.lon)
+    lat: +(params?.lat ?? THE_HAGUE_COORDS.lat),
+    lon: +(params?.lon ?? THE_HAGUE_COORDS.lon)
   };
 
   return (

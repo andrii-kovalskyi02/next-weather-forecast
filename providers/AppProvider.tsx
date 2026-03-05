@@ -4,11 +4,11 @@ import { DateTimeFormatOptions } from "intl";
 import { createContext, useContext } from "react";
 
 type Context = {
-  timeFormatOptions: DateTimeFormatOptions
+  timeFormatOptions: DateTimeFormatOptions;
 };
 
 const AppContext = createContext<Context>({
-  timeFormatOptions: {}
+  timeFormatOptions: {},
 });
 
 export function AppContextProvider({
@@ -22,12 +22,10 @@ export function AppContextProvider({
   };
 
   return (
-    <AppContext.Provider value={{
-      timeFormatOptions
-    }}>
+    <AppContext.Provider value={{ timeFormatOptions }}>
       {children}
     </AppContext.Provider>
-  )
+  );
 }
 
 export function useAppContext() {
